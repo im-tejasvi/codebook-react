@@ -6,12 +6,12 @@
 .editor-wrapper .button-format {
   position: absolute;
   top: 5px;
-  right:5px;
+  right: 5px;
   z-index: 20;
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .editor-wrapper:hover .button-format {
-  opacity:1;
+  opacity: 1;
 }

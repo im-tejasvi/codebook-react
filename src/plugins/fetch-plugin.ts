@@ -1,9 +1,9 @@
-import axios from 'axios';
 import * as esbuild from 'esbuild-wasm';
-import localforage from 'localforage';
+import axios from 'axios';
+import localForage from 'localforage';
 
-const fileCache = localforage.createInstance({
-  name: 'fileCache'
+const fileCache = localForage.createInstance({
+  name: 'filecache',
 });
 
 export const fetchPlugin = (inputCode: string) => {
@@ -13,15 +13,15 @@ export const fetchPlugin = (inputCode: string) => {
       build.onLoad({ filter: /(^index\.js$)/ }, () => {
         return {
           loader: 'jsx',
-          contents: inputCode
+          contents: inputCode,
         };
       });
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
-        console.log('onLoad', args);
         const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
           args.path
         );
+
         if (cachedResult) {
           return cachedResult;
         }
@@ -33,19 +33,17 @@ export const fetchPlugin = (inputCode: string) => {
           .replace(/\n/g, '')
           .replace(/"/g, '\\"')
           .replace(/'/g, "\\'");
-
         const contents = `
           const style = document.createElement('style');
           style.innerText = '${escaped}';
           document.head.appendChild(style);
-          `;
+        `;
 
         const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents,
-          resolveDir: new URL('./', request.responseURL).pathname
+          resolveDir: new URL('./', request.responseURL).pathname,
         };
-
         await fileCache.setItem(args.path, result);
 
         return result;
@@ -57,13 +55,12 @@ export const fetchPlugin = (inputCode: string) => {
         const result: esbuild.OnLoadResult = {
           loader: 'jsx',
           contents: data,
-          resolveDir: new URL('./', request.responseURL).pathname
+          resolveDir: new URL('./', request.responseURL).pathname,
         };
-
         await fileCache.setItem(args.path, result);
 
         return result;
       });
-    }
+    },
   };
 };

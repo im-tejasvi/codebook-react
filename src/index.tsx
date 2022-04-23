@@ -1,10 +1,10 @@
 import 'bulmaswatch/superhero/bulmaswatch.min.css';
 import * as esbuild from 'esbuild-wasm';
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import CodeEditor from './components/code-editor';
-import { fetchPlugin } from './plugins/fetch-plugin';
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin';
+import { fetchPlugin } from './plugins/fetch-plugin';
+import CodeEditor from './components/code-editor';
 
 const App = () => {
   const ref = useRef<any>();
@@ -18,7 +18,6 @@ const App = () => {
       wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm',
     });
   };
-
   useEffect(() => {
     startService();
   }, []);
@@ -51,15 +50,15 @@ const App = () => {
       <body>
         <div id="root"></div>
         <script>
-          window.addEventListener('message',(event)=>{
+          window.addEventListener('message', (event) => {
             try {
               eval(event.data);
             } catch (err) {
-              const root=document.querySelector('#root');
-              root.innerHTML='<div style="color:red;"><h4>Runtime Error: </h4>' + err + '</div>';
+              const root = document.querySelector('#root');
+              root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
               console.error(err);
             }
-          },false);
+          }, false);
         </script>
       </body>
     </html>
@@ -73,20 +72,15 @@ const App = () => {
       />
       <textarea
         value={input}
-        onChange={(event) => setInput(event.target.value)}
+        onChange={(e) => setInput(e.target.value)}
       ></textarea>
       <div>
         <button onClick={onClick}>Submit</button>
       </div>
-      <iframe
-        title="preview"
-        ref={iframe}
-        sandbox="allow-scripts"
-        srcDoc={html}
-      />
+      <pre>{code}</pre>
+      <iframe ref={iframe} sandbox="allow-scripts" srcDoc={html} />
     </div>
   );
 };
 
 ReactDOM.render(<App />, document.querySelector('#root'));
-// 5079
