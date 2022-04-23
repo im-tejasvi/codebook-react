@@ -6,9 +6,10 @@ const App = () => {
   return (
     <div>
       <CodeCell />
-      <CodeCell />
+      {/* <CodeCell /> */}
     </div>
   );
 };
 
 ReactDOM.render(<App />, document.querySelector('#root'));
+// 6032
